@@ -104,7 +104,7 @@ pipeline {
             '''
           }
         }
-     }
+     
           
             post {
        success {
@@ -113,6 +113,6 @@ pipeline {
       failure {
             slackSend (color: '#FF0000', message: "MAZ - FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
           }   
-    }
+            }}
   }
 }
