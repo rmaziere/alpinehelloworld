@@ -1,5 +1,3 @@
-properties([pipelineTriggers([githubPush()])])
-
 pipeline {
      environment {
        ID_DOCKER = "rmaziere"
