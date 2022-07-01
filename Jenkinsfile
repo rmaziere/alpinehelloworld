@@ -53,6 +53,7 @@ pipeline {
           steps {
              script {
                sh '''
+               echo ${DOCKERHUB_PASSWORD} | docker login -u ${ID_DOCKER} --password-stdin
                docker image push ${ID_DOCKER}/${IMAGE_NAME}:${IMAGE_TAG}
                '''
              }
@@ -61,7 +62,7 @@ pipeline {
      
      stage('Push image in staging and deploy it') {
        when {
-              expression { GIT_BRANCH == 'origin/main' }
+            expression { GIT_BRANCH == 'origin/${DEFAULT_BRANCH}' }
             }
       agent any
       environment {
@@ -83,7 +84,7 @@ pipeline {
 
      stage('Push image in production and deploy it') {
        when {
-              expression { GIT_BRANCH == 'origin/main' }
+              expression { GIT_BRANCH == 'origin/${DEFAULT_BRANCH}' }
             }
       agent any
       environment {
