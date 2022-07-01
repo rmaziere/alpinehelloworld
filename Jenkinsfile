@@ -14,20 +14,6 @@ pipeline {
           label 'github-ci'
      }
      stages {
-
-        stage('Checkout SCM') {
-          steps {
-            checkout([
-              $class: 'GitSCM',
-              branches: [[name: 'master']],
-              userRemoteConfigs: [[
-                url: 'git@github.com:rmaziere/alpinehelloworld.git',
-                credentialsId: '',
-              ]]
-            ])
-          }
-        }
-
          stage('Build image') {
              agent any
              steps {
