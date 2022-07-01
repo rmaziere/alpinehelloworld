@@ -1,3 +1,5 @@
+properties([pipelineTriggers([githubPush()])])
+
 pipeline {
      environment {
        ID_DOCKER = "rmaziere"
@@ -10,6 +12,20 @@ pipeline {
      }
      agent none
      stages {
+
+        stage('Checkout SCM') {
+          steps {
+            checkout([
+              $class: 'GitSCM',
+              branches: [[name: 'master']],
+              userRemoteConfigs: [[
+                url: 'git@github.com:${ID_DOCKER}/${IMAGE_NAME}.git',
+                credentialsId: '',
+              ]]
+            ])
+          }
+        }
+
          stage('Build image') {
              agent any
              steps {
