@@ -10,7 +10,9 @@ pipeline {
        DOCKERHUB_CREDENTIALS = credentials('docker-hub-pass')
        PORT = 80
      }
-     agent none
+     agent {
+          label 'github-ci'
+     }
      stages {
 
         stage('Checkout SCM') {
