@@ -21,7 +21,7 @@ pipeline {
               $class: 'GitSCM',
               branches: [[name: 'master']],
               userRemoteConfigs: [[
-                url: 'git@github.com:${ID_DOCKER}/${IMAGE_NAME}.git',
+                url: 'git@github.com:rmaziere/alpinehelloworld.git',
                 credentialsId: '',
               ]]
             ])
