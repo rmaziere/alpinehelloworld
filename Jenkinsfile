@@ -29,11 +29,11 @@ pipeline {
     stage('Run container based on builded image') {
       agent any
       steps {
-      script {
-        sh '''
-        docker run -d -p ${PORT}:5000 -e PORT=5000 --name ${IMAGE_NAME} ${ID_DOCKER}/${IMAGE_NAME}:${IMAGE_TAG} 
-        '''
-      }
+        script {
+          sh '''
+          docker run -d -p ${PORT}:5000 -e PORT=5000 --name ${IMAGE_NAME} ${ID_DOCKER}/${IMAGE_NAME}:${IMAGE_TAG} 
+          '''
+        }
       }
     }
 
@@ -92,8 +92,6 @@ pipeline {
       }
     }
 
-
-
     stage('Push image in production and deploy it') {
       when {
         expression { GIT_BRANCH == 'origin/master' }
@@ -113,15 +111,15 @@ pipeline {
         }
       }
     }
-
-    post {
-      success {
-        slackSend (color: '#00FF00', message: "MAZ - SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
-      }
-      failure {
-        slackSend (color: '#FF0000', message: "MAZ - FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
-      }   
-    }
-
   } //stages
+
+  post {
+    success {
+      slackSend (color: '#00FF00', message: "MAZ - SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+    }
+    failure {
+      slackSend (color: '#FF0000', message: "MAZ - FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+    }   
+  }
+  
 } //pipeline
