@@ -5,6 +5,7 @@ pipeline {
        IMAGE_TAG = "latest"
        STAGING = "${ID_DOCKER}-staging"
        PRODUCTION = "${ID_DOCKER}-production"
+       DOCKERHUB_CREDENTIALS = credentials('docker-hub-pass')
      }
      agent none
      stages {
@@ -53,7 +54,7 @@ pipeline {
           steps {
              script {
                sh '''
-               echo ${DOCKERHUB_PASSWORD} | docker login -u ${ID_DOCKER} --password-stdin
+               echo ${DOCKERHUB_CREDENTIALS_PSW} | docker login -u ${ID_DOCKER} --password-stdin
                docker image push ${ID_DOCKER}/${IMAGE_NAME}:${IMAGE_TAG}
                '''
              }
@@ -62,7 +63,7 @@ pipeline {
      
      stage('Push image in staging and deploy it') {
        when {
-            expression { GIT_BRANCH == 'origin/${DEFAULT_BRANCH}' }
+            expression { GIT_BRANCH == 'origin/${STAGING_BRANCH}' }
             }
       agent any
       environment {
