@@ -6,6 +6,7 @@ pipeline {
        STAGING = "${ID_DOCKER}-staging"
        PRODUCTION = "${ID_DOCKER}-production"
        DOCKERHUB_CREDENTIALS = credentials('docker-hub-pass')
+       PORT = 80
      }
      agent none
      stages {
@@ -22,7 +23,7 @@ pipeline {
             steps {
                script {
                  sh '''
-                 docker run -d -p 80:5000 -e PORT=5000 --name ${IMAGE_NAME} ${ID_DOCKER}/${IMAGE_NAME}:${IMAGE_TAG} 
+                 docker run -d -p ${PORT}:5000 -e PORT=5000 --name ${IMAGE_NAME} ${ID_DOCKER}/${IMAGE_NAME}:${IMAGE_TAG} 
                  '''
                }
             }
@@ -32,7 +33,7 @@ pipeline {
            steps {
               script {
                 sh '''
-                curl http://172.17.0.1 | grep -q "Hello world!"
+                curl http://172.17.0.1:${PORT} | grep -q "Hello world!"
                 '''
               }
            }
@@ -63,7 +64,7 @@ pipeline {
      
      stage('Push image in staging and deploy it') {
        when {
-            expression { GIT_BRANCH == 'origin/${STAGING_BRANCH}' }
+            expression { GIT_BRANCH == 'origin/master' }
             }
       agent any
       environment {
@@ -85,7 +86,7 @@ pipeline {
 
      stage('Push image in production and deploy it') {
        when {
-              expression { GIT_BRANCH == 'origin/${DEFAULT_BRANCH}' }
+              expression { GIT_BRANCH == 'origin/master' }
             }
       agent any
       environment {
